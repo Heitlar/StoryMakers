@@ -11,17 +11,26 @@ import Firebase
 
 class StoryMakersTableVC: UITableViewController {
 
-    let sectionArray = ["Story Maker", "Story Makers"]
+    let sectionArray = ["Story Name Maker:", "Story Makers:"]
     var storyNameDelegate = ""
-    var storyMakers = [String]()
+//    var storyNameCreator = ""
+//    var storyMakers = [String]()
+    var storyMakersSections = [[String](), [String]()]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        Database.database().reference().child("StoryList").child(storyNameDelegate).observe(.childAdded) { snapshot in
-//            let snapshotValue = snapshot.value as! [String : String]
-//            self.storyMakers.append(snapshotValue["Sender"]!)
-//        }
+        Database.database().reference().child("StoryList").child(storyNameDelegate).observe(.childAdded) { snapshot in
+            let snapshotValue = snapshot.value as! [String : String]
+            self.storyMakersSections[1].append(snapshotValue["Sender"]!)
+            let uniqueMakersArray = Array(Set(self.storyMakersSections[1]))
+            if let storyCreator = snapshotValue["StoryCreator"] {
+                self.storyMakersSections[0].append(storyCreator)
+            }
+            self.storyMakersSections[1] = uniqueMakersArray
+            print(self.storyMakersSections)
+            self.tableView.reloadData()
+        }
         
     }
 
@@ -39,7 +48,7 @@ class StoryMakersTableVC: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return storyMakers.count
+        return storyMakersSections[section].count
     }
 
     
@@ -47,8 +56,6 @@ class StoryMakersTableVC: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "StoryMakerCell", for: indexPath)
         
         cell.textLabel?.text = "aa@aaa.aa"
-//        let storyMakerLabel = cell.viewWithTag(102) as! UILabel
-//        storyMakerLabel.text = "aa@aa.aa"
         return cell
     }
     

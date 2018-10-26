@@ -10,11 +10,12 @@ import UIKit
 import Firebase
 
 
-class StoryListTableVC: UITableViewController {
+class StoryListTableVC: UITableViewController, CellDelegate {
 
     var storyArray = [Story]()
     let reference = Database.database().reference()
     let currentUser = Auth.auth().currentUser
+    var storyMakersRow = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +25,7 @@ class StoryListTableVC: UITableViewController {
         tableView.backgroundView = imageView
         
         
-        reference.child("StoryList").observe(.childAdded) { (snapshot) in
+        reference.child("StoryList").observe(.childAdded) { snapshot in
             let story = Story()
             story.name = snapshot.key
             self.storyArray.append(story)
@@ -49,6 +50,7 @@ class StoryListTableVC: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "StoryListCell", for: indexPath) as! StoryListCell
         
+        cell.delegate = self
 //        let storyNameLabel = cell.viewWithTag(100) as! UILabel
 //        let storyNameLabel = cell.storyName!
 //        let storyCreatorLabel = cell.viewWithTag(101) as! UILabel
@@ -107,11 +109,11 @@ class StoryListTableVC: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             
             
-            reference.child("StoryList").child(storyArray[indexPath.row].name).observeSingleEvent(of: .childAdded, with: { (snapshot) in
+            reference.child("StoryList").child(storyArray[indexPath.row].name).observeSingleEvent(of: .childAdded, with: { snapshot in
                 let snapshotValue = snapshot.value as! Dictionary<String,String>
                 guard let storyCreator = snapshotValue["StoryCreator"] else {
                     print("Where is no creators in this story.")
@@ -215,7 +217,9 @@ class StoryListTableVC: UITableViewController {
         }
             //TODO: ADD CHANGES HERE!
         else if segue.identifier == "StoryMakers" {
-//            let destinationVC = segue.destination as! StoryMakersTableVC
+            let destinationVC = segue.destination as! StoryMakersTableVC
+            destinationVC.storyNameDelegate = storyArray[storyMakersRow].name
+            
             print("Story Makers Segue.")
         }
     }
@@ -232,6 +236,10 @@ class StoryListTableVC: UITableViewController {
         
     }
     
+    func buttonTapped(cell: StoryListCell) {
+        let indexPath = self.tableView.indexPath(for: cell)
+        storyMakersRow = indexPath!.row
+    }
 
     
     /*

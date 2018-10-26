@@ -25,7 +25,7 @@ class LogInViewController: UIViewController {
     }
     
     @IBAction func logInButton(_ sender: Any) {
-        Auth.auth().signIn(withEmail: login.text!, password: password.text!) {(user, error) in
+        Auth.auth().signIn(withEmail: login.text!, password: password.text!) { user, error in
             
             if error != nil {
                 print(error!.localizedDescription)
@@ -39,13 +39,9 @@ class LogInViewController: UIViewController {
                     Auth.auth().currentUser?.sendEmailVerification(completion: nil)
                     self.alert(title: "Message: ", message: "Please verify your e-mail to log in.")
                 }
-                
             }
         }
-        
     }
-    
-
     
     func alert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -53,16 +49,5 @@ class LogInViewController: UIViewController {
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
-    
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

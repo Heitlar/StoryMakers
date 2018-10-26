@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol CellDelegate {
+    func buttonTapped(cell: StoryListCell)
+}
+
 class StoryListCell: UITableViewCell {
 
  
@@ -16,6 +20,8 @@ class StoryListCell: UITableViewCell {
     @IBOutlet weak var cellBackgroundImage: UIImageView!
     
     @IBOutlet weak var button: UIButton!
+    
+    var delegate: CellDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -31,7 +37,9 @@ class StoryListCell: UITableViewCell {
     
     
     @IBAction func storyMakersButton(_ sender: UIButton) {
-        print("Story Makers Button.")        
+        
+        delegate?.buttonTapped(cell: self)
+        print("Story Makers Button.")
     }
     
     

@@ -28,7 +28,7 @@ class RegisterViewController: UIViewController {
     
     @IBAction func registerButton(_ sender: Any) {
         
-        Auth.auth().createUser(withEmail: email.text!, password: password.text!) { (user, error) in
+        Auth.auth().createUser(withEmail: email.text!, password: password.text!) { user, error in
             
             if error != nil {
                 self.alert(title: "Error", message: error!.localizedDescription, handler: nil)
@@ -41,16 +41,13 @@ class RegisterViewController: UIViewController {
                     self.createNickname()
                     Auth.auth().currentUser?.sendEmailVerification(completion: nil)
                     let message = "A letter has been sent to your e-mail. Please verify your e-mail to log in."
-                    self.alert(title: "Message:", message: message, handler: { (action) in
-                        
+                    self.alert(title: "Message:", message: message, handler: { action in
                         self.navigationController?.popToRootViewController(animated: true)
                     })
                 }
             }
         }
     }
-    
-
     
     func alert(title: String, message: String, handler: ((UIAlertAction) -> Void)?) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -63,18 +60,6 @@ class RegisterViewController: UIViewController {
         let database = reference.child("Nicknames")
         let dictionary = ["Nickname": nickname.text!, "Email": email.text!]
         database.childByAutoId().setValue(dictionary)
-
     }
-    
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

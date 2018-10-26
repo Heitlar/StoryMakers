@@ -85,7 +85,7 @@ class StoryViewController: UIViewController, UITextViewDelegate, UITextFieldDele
                 self.reference.child("Nicknames").observe(.childAdded) { (snapshot) in
                     let snapshotValue = snapshot.value as! [String : String]
                     if snapshotValue["Email"]! == sender {
-                        storyText = "(" + snapshotValue["Nickname"]! + ")" + ": " + storyText + " "
+                        storyText = "(\(snapshotValue["Nickname"]!)): \(storyText) "
 //                        print("Nickname:", snapshotValue["Nickname"]!)
 //                        print("Story text: ", storyText)
                        
