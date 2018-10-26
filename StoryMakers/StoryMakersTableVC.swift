@@ -13,8 +13,6 @@ class StoryMakersTableVC: UITableViewController {
 
     let sectionArray = ["Story Name Maker:", "Story Makers:"]
     var storyNameDelegate = ""
-//    var storyNameCreator = ""
-//    var storyMakers = [String]()
     var storyMakersSections = [[String](), [String]()]
     
     override func viewDidLoad() {
@@ -55,7 +53,7 @@ class StoryMakersTableVC: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "StoryMakerCell", for: indexPath)
         
-        cell.textLabel?.text = "aa@aaa.aa"
+        cell.textLabel?.text = storyMakersSections[indexPath.section][indexPath.row]
         return cell
     }
     
