@@ -16,6 +16,7 @@ class StoryListTableVC: UITableViewController, CellDelegate {
     let reference = Database.database().reference()
     let currentUser = Auth.auth().currentUser
     var storyMakersRow = 0
+    var array = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +32,8 @@ class StoryListTableVC: UITableViewController, CellDelegate {
             self.storyArray.append(story)
             self.tableView.reloadData()
         }
+        
+//        reference.child("Nicknames").removeValue()
     
         tableView.register(UINib(nibName: "StoryListCell", bundle: nil), forCellReuseIdentifier: "StoryListCell")
 

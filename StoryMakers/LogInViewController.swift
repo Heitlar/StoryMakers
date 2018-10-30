@@ -17,7 +17,6 @@ class LogInViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,13 +30,14 @@ class LogInViewController: UIViewController {
                 print(error!.localizedDescription)
                 self.alert(title: "Message:", message: error!.localizedDescription)
             } else {
-                if (user?.isEmailVerified)! {
+                if (Auth.auth().currentUser?.isEmailVerified)! {
                     print("Log in succesful")
                     self.performSegue(withIdentifier: "logInToStoryList", sender: self)
                 } else {
                     print("Please verify your e-mail.")
                     Auth.auth().currentUser?.sendEmailVerification(completion: nil)
                     self.alert(title: "Message: ", message: "Please verify your e-mail to log in.")
+                    
                 }
             }
         }

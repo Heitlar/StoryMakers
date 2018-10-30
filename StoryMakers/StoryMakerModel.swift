@@ -6,7 +6,7 @@
 //  Copyright © 2017 Sergey Larkin. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 class User {
     var name = ""
@@ -19,3 +19,20 @@ class Story {
     var name = ""
     var text = ""
 }
+
+class Alert {
+  
+    public static func create(viewController: UIViewController, title: String, message: String, buttonTitle: String, closure: ((UIAlertAction) -> Void)?) {
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: buttonTitle, style: .default, handler: closure)
+        
+        alert.addAction(action)
+        
+        viewController.present(alert, animated: true, completion: nil)
+    }
+    
+}
+
+
+

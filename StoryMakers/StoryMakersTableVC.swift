@@ -14,6 +14,7 @@ class StoryMakersTableVC: UITableViewController {
     let sectionArray = ["Story Name Maker:", "Story Makers:"]
     var storyNameDelegate = ""
     var storyMakersSections = [[String](), [String]()]
+    var dict = [String: String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,8 +27,23 @@ class StoryMakersTableVC: UITableViewController {
                 self.storyMakersSections[0].append(storyCreator)
             }
             self.storyMakersSections[1] = uniqueMakersArray
-            print(self.storyMakersSections)
+//            print(self.storyMakersSections)
             self.tableView.reloadData()
+        }
+        
+        Database.database().reference().child("Nicknames").observe(.childAdded) { (snapshot) in
+            let snapshotValue = snapshot.value as! [String : String]
+//            if self.storyMakersSections[0].contains(snapshotValue["Email"]!) {
+//                self.nickNames[0].append(snapshotValue["Nickname"]!)
+//            } else if self.storyMakersSections[1].contains(snapshotValue["Email"]!) {
+//                self.nickNames[1].append(snapshotValue["Nickname"]!)
+//            }
+            
+            let key = snapshotValue["Email"]!
+            let value = snapshotValue["Nickname"]!
+            self.dict[key] = value
+            self.tableView.reloadData()
+//            print(self.dict)
         }
         
     }
@@ -52,8 +68,10 @@ class StoryMakersTableVC: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "StoryMakerCell", for: indexPath)
-        
-        cell.textLabel?.text = storyMakersSections[indexPath.section][indexPath.row]
+        let email = storyMakersSections[indexPath.section][indexPath.row]
+        if let nickname = dict[email] {
+            cell.textLabel?.text = "\(nickname)(\(email))"
+        }
         return cell
     }
     
