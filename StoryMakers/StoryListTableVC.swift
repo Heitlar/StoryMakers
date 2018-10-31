@@ -10,9 +10,11 @@ import UIKit
 import Firebase
 
 
-class StoryListTableVC: UITableViewController, CellDelegate {
+class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate {
 
+    @IBOutlet weak var searchBar: UISearchBar!
     var storyArray = [Story]()
+    var searchStoryArray = [Story]()
     let reference = Database.database().reference()
     let currentUser = Auth.auth().currentUser
     var storyMakersRow = 0
@@ -21,15 +23,17 @@ class StoryListTableVC: UITableViewController, CellDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        searchBar.delegate = self
         let backGroundImage = UIImage(named: "Books")
         let imageView = UIImageView(image: backGroundImage)
         tableView.backgroundView = imageView
-        
         
         reference.child("StoryList").observe(.childAdded) { snapshot in
             let story = Story()
             story.name = snapshot.key
             self.storyArray.append(story)
+            self.searchStoryArray = self.storyArray
+
             self.tableView.reloadData()
         }
         
@@ -47,7 +51,7 @@ class StoryListTableVC: UITableViewController, CellDelegate {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return storyArray.count
+        return searchStoryArray.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -64,7 +68,7 @@ class StoryListTableVC: UITableViewController, CellDelegate {
         
 //        storyNameLabel.text = storyNamesArray[indexPath.row]
 //        storyCreatorLabel.text = storyCreatorArray[indexPath.row]
-        cell.storyName.text = storyArray[indexPath.row].name
+        cell.storyName.text = searchStoryArray[indexPath.row].name
 //        storyNameLabel.text = storyArray[indexPath.row].name
 //        storyCreatorLabel.text = storyArray[indexPath.row].maker
         cell.button.addTarget(self, action: #selector(segueAction), for: .touchUpInside)
@@ -77,7 +81,8 @@ class StoryListTableVC: UITableViewController, CellDelegate {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let name = storyArray[indexPath.row].name
+        let name = searchStoryArray[indexPath.row].name
+        print(name, indexPath.row)
         
         reference.child("StoryList").child(name).observeSingleEvent(of: .childAdded) { snapshot in
             let snapshotValue = snapshot.value as! [String : String]
@@ -210,18 +215,18 @@ class StoryListTableVC: UITableViewController, CellDelegate {
             let destinationVC = segue.destination as! StoryViewController
             
             if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
-                destinationVC.storyNameDelegate = storyArray[indexPath.row].name
+                destinationVC.storyNameDelegate = searchStoryArray[indexPath.row].name
             }
         } else if segue.identifier == "StoryListToStory" {
-            let currentName = storyArray[storyArray.count - 1].name
+            let currentName = searchStoryArray[storyArray.count - 1].name
             
             let destinationVC = segue.destination as! StoryViewController
             destinationVC.storyNameDelegate = currentName
         }
-            //TODO: ADD CHANGES HERE!
+           
         else if segue.identifier == "StoryMakers" {
             let destinationVC = segue.destination as! StoryMakersTableVC
-            destinationVC.storyNameDelegate = storyArray[storyMakersRow].name
+            destinationVC.storyNameDelegate = searchStoryArray[storyMakersRow].name
             
             print("Story Makers Segue.")
         }
@@ -244,6 +249,29 @@ class StoryListTableVC: UITableViewController, CellDelegate {
         storyMakersRow = indexPath!.row
     }
 
+    
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        searchStoryArray = searchText.isEmpty ? storyArray : storyArray.filter { (item: Story) -> Bool in
+            return item.name.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
+        }
+
+        tableView.reloadData()
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        self.searchBar.showsCancelButton = true
+    }
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = false
+        searchBar.text = ""
+        searchStoryArray = storyArray
+        tableView.reloadData()
+        searchBar.resignFirstResponder()
+    }
+    
+    
     
     /*
     // Override to support conditional editing of the table view.
