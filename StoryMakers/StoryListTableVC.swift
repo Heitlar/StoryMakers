@@ -20,27 +20,25 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
     var storyMakersRow = 0
     var array = [String]()
     
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        searchBar.searchBarStyle = .prominent
+        searchBar.placeholder = "Search"
+
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        definesPresentationContext = true
         searchBar.delegate = self
-        let backGroundImage = UIImage(named: "Books")
-        let imageView = UIImageView(image: backGroundImage)
+        let backgroundImage = UIImage(named: "Books")
+        let imageView = UIImageView(image: backgroundImage)
         tableView.backgroundView = imageView
         
-        reference.child("StoryList").observe(.childAdded) { snapshot in
-            let story = Story()
-            story.name = snapshot.key
-            self.storyArray.append(story)
-            self.searchStoryArray = self.storyArray
-
-            self.tableView.reloadData()
-        }
-        
-//        reference.child("Nicknames").removeValue()
-    
+        getStoryListItems()
         tableView.register(UINib(nibName: "StoryListCell", bundle: nil), forCellReuseIdentifier: "StoryListCell")
-
         tableView.separatorStyle = .none
     }
 
@@ -58,19 +56,10 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
         let cell = tableView.dequeueReusableCell(withIdentifier: "StoryListCell", for: indexPath) as! StoryListCell
         
         cell.delegate = self
-//        let storyNameLabel = cell.viewWithTag(100) as! UILabel
-//        let storyNameLabel = cell.storyName!
-//        let storyCreatorLabel = cell.viewWithTag(101) as! UILabel
-        
         cell.storyName.layer.shadowRadius = 2.0
         cell.storyName.layer.shadowColor = UIColor.white.cgColor
         cell.storyName.layer.shadowOpacity = 80.0
-        
-//        storyNameLabel.text = storyNamesArray[indexPath.row]
-//        storyCreatorLabel.text = storyCreatorArray[indexPath.row]
         cell.storyName.text = searchStoryArray[indexPath.row].name
-//        storyNameLabel.text = storyArray[indexPath.row].name
-//        storyCreatorLabel.text = storyArray[indexPath.row].maker
         cell.button.addTarget(self, action: #selector(segueAction), for: .touchUpInside)
         return cell
     }
@@ -81,39 +70,7 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let name = searchStoryArray[indexPath.row].name
-        print(name, indexPath.row)
-        
-        reference.child("StoryList").child(name).observeSingleEvent(of: .childAdded) { snapshot in
-            let snapshotValue = snapshot.value as! [String : String]
-            
-            
-            if snapshotValue["StoryCreator"]! == self.currentUser!.email! {
-                self.performSegue(withIdentifier: "StoryChosen", sender: tableView.cellForRow(at: indexPath))
-            } else if snapshotValue["StoryPassword"] == nil || snapshotValue["StoryPassword"]! == "" {
-                self.performSegue(withIdentifier: "StoryChosen", sender: tableView.cellForRow(at: indexPath))
-
-            } else {
-                let alert = UIAlertController(title: "Warning", message: "Enter password:", preferredStyle: .alert)
-                let action = UIAlertAction(title: "OK", style: .default) { alertAction in
-                    let textField = alert.textFields!.first!
-                    
-                     if textField.text! != snapshotValue["StoryPassword"]! {
-                        let alert = UIAlertController(title: "Error", message: "Wrong password", preferredStyle: .alert)
-                        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-                        alert.addAction(action)
-                        self.present(alert, animated: true, completion: nil)
-                    } else {
-                        self.performSegue(withIdentifier: "StoryChosen", sender: tableView.cellForRow(at: indexPath))
-                    }
-                }
-                alert.addTextField { textField in
-                    textField.placeholder = "password"
-                }
-                alert.addAction(action)
-                self.present(alert, animated: true, completion: nil)
-            }
-        }
+        storyChosenManager(indexPath: indexPath)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -142,12 +99,52 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
                     print("\(currentUser) is not the creator of this story.")
                 }
             })
-        }  //else if editingStyle == .insert {
-//            Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        //}
+        }
     }
     
     //MARK: My functions
+    
+    func getStoryListItems() {
+        reference.child("StoryList").observe(.childAdded) { snapshot in
+            let story = Story()
+            story.name = snapshot.key
+            self.storyArray.append(story)
+            self.searchStoryArray = self.storyArray
+            self.tableView.reloadData()
+        }
+    }
+    
+    func storyChosenManager(indexPath: IndexPath) {
+        
+        reference.child("StoryList").child(searchStoryArray[indexPath.row].name).observeSingleEvent(of: .childAdded) { snapshot in
+            let snapshotValue = snapshot.value as! [String : String]
+            
+            if snapshotValue["StoryCreator"]! == self.currentUser!.email! {
+                self.performSegue(withIdentifier: "StoryChosen", sender: self.tableView.cellForRow(at: indexPath))
+            } else if snapshotValue["StoryPassword"] == nil || snapshotValue["StoryPassword"]! == "" {
+                self.performSegue(withIdentifier: "StoryChosen", sender: self.tableView.cellForRow(at: indexPath))
+            } else {
+                let alert = UIAlertController(title: "Warning", message: "Enter password:", preferredStyle: .alert)
+                let action = UIAlertAction(title: "OK", style: .default) { alertAction in
+                    let textField = alert.textFields!.first!
+                    
+                    if textField.text! != snapshotValue["StoryPassword"]! {
+                        let alert = UIAlertController(title: "Error", message: "Wrong password", preferredStyle: .alert)
+                        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                        alert.addAction(action)
+                        self.present(alert, animated: true, completion: nil)
+                    } else {
+                        self.performSegue(withIdentifier: "StoryChosen", sender: self.tableView.cellForRow(at: indexPath))
+                    }
+                }
+                alert.addTextField { textField in
+                    textField.placeholder = "password"
+                }
+                alert.addAction(action)
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
+    }
     
     func deleteFromDBAndTableView(_ indexPath: IndexPath) {
         
@@ -252,7 +249,7 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
     
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
+        print("Did change")
         searchStoryArray = searchText.isEmpty ? storyArray : storyArray.filter { (item: Story) -> Bool in
             return item.name.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
         }
@@ -261,55 +258,20 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        self.searchBar.showsCancelButton = true
+        searchBar.showsCancelButton = true
+        print("Did begin")
     }
+    
+    
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.showsCancelButton = false
         searchBar.text = ""
+        print("Cancel pressed")
         searchStoryArray = storyArray
         tableView.reloadData()
         searchBar.resignFirstResponder()
     }
-    
-    
-    
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    
-
-    
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 extension UITableView {
