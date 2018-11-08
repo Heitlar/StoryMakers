@@ -39,7 +39,6 @@ class StoryListCell: UITableViewCell {
     @IBAction func storyMakersButton(_ sender: UIButton) {
         
         delegate?.buttonTapped(cell: self)
-        print("Story Makers Button.")
     }
     
     

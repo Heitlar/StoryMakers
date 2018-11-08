@@ -36,8 +36,6 @@ class StoryViewController: UIViewController, UITextViewDelegate, UITextFieldDele
         addTextToStory.addTarget(self, action: #selector(textFieldContains(textField:)), for: .editingChanged)
         retrieveSentence()
         
-
-        
     }
     
     override func didReceiveMemoryWarning() {
@@ -58,37 +56,28 @@ class StoryViewController: UIViewController, UITextViewDelegate, UITextFieldDele
     @IBAction func addStoryButton(_ sender: Any) {
         appendTextToStory()
     }
-
-
+    
+    
     @IBAction func keyboardAddStory(_ sender: Any) {
         appendTextToStory()
         print("Keyboard 'send' tapped")
     }
     
-    
-    
-    
     func retrieveSentence() {
         let database = reference.child("StoryList").child(storyTitle.text!)
         database.observe(.childAdded) { (snapshot) in
-
+            
             let snapshotValue = snapshot.value as! [String : String]
             
-//            let sender = snapshotValue["Sender"]!
-//            let userName = "(\(sender.prefix(upTo: sender.index(of: "@")!))): "
-
             var storyText = snapshotValue["StoryText"]!
             let storyName = snapshotValue["StoryName"]!
             let sender = snapshotValue["Sender"]!
             if storyText != "" {
-//                print(storyText)
                 self.reference.child("Nicknames").observe(.childAdded) { (snapshot) in
                     let snapshotValue = snapshot.value as! [String : String]
                     if snapshotValue["Email"]! == sender {
                         storyText = "(\(snapshotValue["Nickname"]!)): \(storyText) "
-//                        print("Nickname:", snapshotValue["Nickname"]!)
-//                        print("Story text: ", storyText)
-                       
+                        
                         if storyName == self.storyTitle.text {
                             self.storyText.text! += storyText
                         }
@@ -101,8 +90,6 @@ class StoryViewController: UIViewController, UITextViewDelegate, UITextFieldDele
     @objc func textViewTapped() {
         addTextToStory.endEditing(true)
     }
-    
-    
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         UIView.animate(withDuration: 0.27) {
@@ -123,7 +110,7 @@ class StoryViewController: UIViewController, UITextViewDelegate, UITextFieldDele
             addTextToStory.endEditing(true)
             addTextToStory.isEnabled = false
             sendButton.isEnabled = false
-
+            
             let database = reference.child("StoryList").child(storyTitle.text!)
             let storyDictionary = ["Sender": Auth.auth().currentUser?.email, "StoryName": storyTitle.text!, "StoryText": addTextToStory.text!]
             database.childByAutoId().setValue(storyDictionary) {
@@ -137,8 +124,6 @@ class StoryViewController: UIViewController, UITextViewDelegate, UITextFieldDele
                     self.sendButton.isEnabled = true
                 }
             }
-
-            
         }
     }
     

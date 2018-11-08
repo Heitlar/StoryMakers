@@ -11,7 +11,7 @@ import Firebase
 
 
 class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate {
-
+    
     @IBOutlet weak var searchBar: UISearchBar!
     var storyArray = [Story]()
     var searchStoryArray = [Story]()
@@ -26,7 +26,7 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
         
         searchBar.searchBarStyle = .prominent
         searchBar.placeholder = "Search"
-
+        
     }
     
     override func viewDidLoad() {
@@ -41,17 +41,17 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
         tableView.register(UINib(nibName: "StoryListCell", bundle: nil), forCellReuseIdentifier: "StoryListCell")
         tableView.separatorStyle = .none
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-
+    
     // MARK: - Table view data source
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchStoryArray.count
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "StoryListCell", for: indexPath) as! StoryListCell
         
@@ -124,19 +124,33 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
             } else if snapshotValue["StoryPassword"] == nil || snapshotValue["StoryPassword"]! == "" {
                 self.performSegue(withIdentifier: "StoryChosen", sender: self.tableView.cellForRow(at: indexPath))
             } else {
+                
+                
+                
+//                let actionHandler : ((UIAlertAction) -> Void)? = { alertAction in
+//                    let textField = UIAlertController().textFields!.first!
+//                    if textField.text! != snapshotValue["StoryPassword"]! {
+//                        self.showAlert(title: "Error", message: "Wrong password", actionHandler: nil, textFieldHandler: nil)
+//                    } else {
+//                        self.performSegue(withIdentifier: "StoryChosen", sender: self.tableView.cellForRow(at: indexPath))
+//                    }
+//                }
+//
+//                self.showAlert(title: "Error", message: "Wrong password", actionHandler: actionHandler, textFieldHandler: { textField in
+//                    textField.placeholder = "password"
+//                })
+                
                 let alert = UIAlertController(title: "Warning", message: "Enter password:", preferredStyle: .alert)
                 let action = UIAlertAction(title: "OK", style: .default) { alertAction in
                     let textField = alert.textFields!.first!
-                    
+
                     if textField.text! != snapshotValue["StoryPassword"]! {
-                        let alert = UIAlertController(title: "Error", message: "Wrong password", preferredStyle: .alert)
-                        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-                        alert.addAction(action)
-                        self.present(alert, animated: true, completion: nil)
+                        self.showAlert(title: "Error", message: "Wrong password", actionHandler: nil, textFieldHandler: nil)
                     } else {
                         self.performSegue(withIdentifier: "StoryChosen", sender: self.tableView.cellForRow(at: indexPath))
                     }
                 }
+
                 alert.addTextField { textField in
                     textField.placeholder = "password"
                 }
@@ -162,14 +176,11 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
     @IBAction func logOut(_ sender: UIBarButtonItem) {
         do {
             try Auth.auth().signOut()
-            print("Log out successful.")
             navigationController?.popToRootViewController(animated: true)
-
         } catch {
-            print("Error, problems logging out.")
+            self.showAlert(title: "Error", message: "You should log in first", actionHandler: nil, textFieldHandler: nil)
         }
     }
-    
     
     @IBAction func addNewStory(_ sender: UIBarButtonItem) {
         
@@ -186,7 +197,6 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
                 if error != nil {
                     print(error!)
                 } else {
-                    print("Story title saved successfully!")
                     self.performSegue(withIdentifier: "StoryListToStory", sender: self)
                 }
             }
@@ -220,7 +230,7 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
             let destinationVC = segue.destination as! StoryViewController
             destinationVC.storyNameDelegate = currentName
         }
-           
+            
         else if segue.identifier == "StoryMakers" {
             let destinationVC = segue.destination as! StoryMakersTableVC
             destinationVC.storyNameDelegate = searchStoryArray[storyMakersRow].name
@@ -228,7 +238,7 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
             print("Story Makers Segue.")
         }
     }
-
+    
     @objc func enableAlertButton(text: UITextField) {
         let alertController = self.presentedViewController as! UIAlertController
         let textField = alertController.textFields![0]
@@ -245,39 +255,26 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
         let indexPath = self.tableView.indexPath(for: cell)
         storyMakersRow = indexPath!.row
     }
-
-    
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print("Did change")
         searchStoryArray = searchText.isEmpty ? storyArray : storyArray.filter { (item: Story) -> Bool in
             return item.name.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
         }
-
         tableView.reloadData()
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.showsCancelButton = true
-        print("Did begin")
     }
-    
-    
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.showsCancelButton = false
         searchBar.text = ""
-        print("Cancel pressed")
         searchStoryArray = storyArray
         tableView.reloadData()
         searchBar.resignFirstResponder()
     }
 }
 
-extension UITableView {
-    func indexPathForView(view: AnyObject) -> IndexPath? {
-        let location = view.convert(CGPoint.zero, to: self)
-        return self.indexPathForRow(at: location)
-    }
-}
+
 

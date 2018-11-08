@@ -12,6 +12,7 @@
 		91126B6D1FEBA0690073776A /* StoryMakersTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91126B6C1FEBA0690073776A /* StoryMakersTableVC.swift */; };
 		91126B721FED64430073776A /* StoryListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91126B701FED64430073776A /* StoryListCell.swift */; };
 		91126B731FED64430073776A /* StoryListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 91126B711FED64430073776A /* StoryListCell.xib */; };
+		915177F42194614A0077D3D4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915177F32194614A0077D3D4 /* Extensions.swift */; };
 		917F5E831FE8FF8700D21636 /* StoryMakerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 917F5E821FE8FF8700D21636 /* StoryMakerModel.swift */; };
 		91A715211FC9522B0082FD69 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A715201FC9522B0082FD69 /* AppDelegate.swift */; };
 		91A715231FC9522B0082FD69 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A715221FC9522B0082FD69 /* WelcomeViewController.swift */; };
@@ -32,6 +33,7 @@
 		91126B6C1FEBA0690073776A /* StoryMakersTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryMakersTableVC.swift; sourceTree = "<group>"; };
 		91126B701FED64430073776A /* StoryListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryListCell.swift; sourceTree = "<group>"; };
 		91126B711FED64430073776A /* StoryListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StoryListCell.xib; sourceTree = "<group>"; };
+		915177F32194614A0077D3D4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		917F5E821FE8FF8700D21636 /* StoryMakerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryMakerModel.swift; sourceTree = "<group>"; };
 		91A7151D1FC9522B0082FD69 /* StoryMakers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StoryMakers.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		91A715201FC9522B0082FD69 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				91A715201FC9522B0082FD69 /* AppDelegate.swift */,
+				915177F32194614A0077D3D4 /* Extensions.swift */,
 				917F5E821FE8FF8700D21636 /* StoryMakerModel.swift */,
 				91A715221FC9522B0082FD69 /* WelcomeViewController.swift */,
 				91D6ADCF1FC995F600BA0B2B /* LogInViewController.swift */,
@@ -246,6 +249,7 @@
 				91A715231FC9522B0082FD69 /* WelcomeViewController.swift in Sources */,
 				917F5E831FE8FF8700D21636 /* StoryMakerModel.swift in Sources */,
 				91A715211FC9522B0082FD69 /* AppDelegate.swift in Sources */,
+				915177F42194614A0077D3D4 /* Extensions.swift in Sources */,
 				91CBBC621FD15B4A00D9BD47 /* StoryListTableVC.swift in Sources */,
 				91D6ADD01FC995F700BA0B2B /* LogInViewController.swift in Sources */,
 				91D6ADD21FC9960E00BA0B2B /* RegisterViewController.swift in Sources */,
