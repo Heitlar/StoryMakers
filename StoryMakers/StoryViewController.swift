@@ -11,7 +11,6 @@ import Firebase
 
 class StoryViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
     
-    
     var storyNameDelegate = ""
     var reference = Database.database().reference()
     
@@ -134,5 +133,4 @@ class StoryViewController: UIViewController, UITextViewDelegate, UITextFieldDele
             sendButton.isEnabled = false
         }
     }
-    
 }

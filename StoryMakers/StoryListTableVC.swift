@@ -20,7 +20,6 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
     var storyMakersRow = 0
     var array = [String]()
     
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
@@ -91,11 +90,7 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
                 if storyCreator == currentUser {
                     self.deleteFromDBAndTableView(indexPath)
                 } else {
-                    let alert = UIAlertController(title: "Warning", message: "Can't delete story made by another user.", preferredStyle: .alert)
-                    let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-                    
-                    alert.addAction(action)
-                    self.present(alert, animated: true, completion: nil)
+                    self.showAlert(title: "Warning", message: "Can't delete story made by another user.", actionHandler: nil)
                     print("\(currentUser) is not the creator of this story.")
                 }
             })
@@ -125,27 +120,12 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
                 self.performSegue(withIdentifier: "StoryChosen", sender: self.tableView.cellForRow(at: indexPath))
             } else {
                 
-                
-                
-//                let actionHandler : ((UIAlertAction) -> Void)? = { alertAction in
-//                    let textField = UIAlertController().textFields!.first!
-//                    if textField.text! != snapshotValue["StoryPassword"]! {
-//                        self.showAlert(title: "Error", message: "Wrong password", actionHandler: nil, textFieldHandler: nil)
-//                    } else {
-//                        self.performSegue(withIdentifier: "StoryChosen", sender: self.tableView.cellForRow(at: indexPath))
-//                    }
-//                }
-//
-//                self.showAlert(title: "Error", message: "Wrong password", actionHandler: actionHandler, textFieldHandler: { textField in
-//                    textField.placeholder = "password"
-//                })
-                
                 let alert = UIAlertController(title: "Warning", message: "Enter password:", preferredStyle: .alert)
                 let action = UIAlertAction(title: "OK", style: .default) { alertAction in
                     let textField = alert.textFields!.first!
 
                     if textField.text! != snapshotValue["StoryPassword"]! {
-                        self.showAlert(title: "Error", message: "Wrong password", actionHandler: nil, textFieldHandler: nil)
+                        self.showAlert(title: "Error", message: "Wrong password", actionHandler: nil)
                     } else {
                         self.performSegue(withIdentifier: "StoryChosen", sender: self.tableView.cellForRow(at: indexPath))
                     }
@@ -178,7 +158,7 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
             try Auth.auth().signOut()
             navigationController?.popToRootViewController(animated: true)
         } catch {
-            self.showAlert(title: "Error", message: "You should log in first", actionHandler: nil, textFieldHandler: nil)
+            self.showAlert(title: "Error", message: "You should log in first", actionHandler: nil)
         }
     }
     
@@ -202,12 +182,13 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
             }
         }
         action.isEnabled = false
-        alert.addTextField { (textField) in
-            textField.autocapitalizationType = UITextAutocapitalizationType.sentences
-            textField.placeholder = "Enter your story name here."
-            textField.addTarget(self, action: #selector(self.enableAlertButton(text:)), for: .editingChanged)
+        alert.addTextField { (storyName) in
+            storyName.autocapitalizationType = UITextAutocapitalizationType.sentences
+            storyName.placeholder = "Enter your story name here."
+            storyName.addTarget(self, action: #selector(self.enableAlertButton(text:)), for: .editingChanged)
         }
         alert.addTextField { (passwordText) in
+            passwordText.isSecureTextEntry = true
             passwordText.placeholder = "Enter password"
         }
         
@@ -220,10 +201,10 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
         if segue.identifier == "StoryChosen" {
             
             let destinationVC = segue.destination as! StoryViewController
-            
             if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
                 destinationVC.storyNameDelegate = searchStoryArray[indexPath.row].name
             }
+            clearSearch()
         } else if segue.identifier == "StoryListToStory" {
             let currentName = searchStoryArray[storyArray.count - 1].name
             
@@ -269,10 +250,15 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.showsCancelButton = false
+        clearSearch()
+    }
+    
+    func clearSearch() {
         searchBar.text = ""
         searchStoryArray = storyArray
         tableView.reloadData()
         searchBar.resignFirstResponder()
+        
     }
 }
 

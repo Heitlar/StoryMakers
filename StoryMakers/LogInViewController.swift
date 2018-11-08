@@ -28,7 +28,7 @@ class LogInViewController: UIViewController {
             
             if error != nil {
                 print(error!.localizedDescription)
-                self.showAlert(title: "Message:", message: error!.localizedDescription, actionHandler: nil, textFieldHandler: nil)
+                self.showAlert(title: "Message:", message: error!.localizedDescription, actionHandler: nil)
             } else {
                 if (Auth.auth().currentUser?.isEmailVerified)! {
                     print("Log in succesful")
@@ -36,7 +36,7 @@ class LogInViewController: UIViewController {
                 } else {
                     print("Please verify your e-mail.")
                     Auth.auth().currentUser?.sendEmailVerification(completion: nil)
-                    self.showAlert(title: "Message: ", message: "Please verify your e-mail to log in.", actionHandler: nil, textFieldHandler: nil)
+                    self.showAlert(title: "Message: ", message: "Please verify your e-mail to log in.", actionHandler: nil)
                     
                 }
             }

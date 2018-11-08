@@ -110,8 +110,8 @@
 				91126B701FED64430073776A /* StoryListCell.swift */,
 				91126B711FED64430073776A /* StoryListCell.xib */,
 				91A715241FC9522B0082FD69 /* Main.storyboard */,
-				91A715271FC9522B0082FD69 /* Assets.xcassets */,
 				91A715291FC9522B0082FD69 /* LaunchScreen.storyboard */,
+				91A715271FC9522B0082FD69 /* Assets.xcassets */,
 				910B1AC81FF2B0D800E6E6CF /* GoogleService-Info.plist */,
 				91A7152C1FC9522B0082FD69 /* Info.plist */,
 			);

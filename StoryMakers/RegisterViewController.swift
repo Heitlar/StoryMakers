@@ -31,11 +31,10 @@ class RegisterViewController: UIViewController {
         Auth.auth().createUser(withEmail: email.text!, password: password.text!) { user, error in
             
             if error != nil {
-                self.showAlert(title: "Error", message: error!.localizedDescription, actionHandler: nil, textFieldHandler: nil)
+                self.showAlert(title: "Error", message: error!.localizedDescription, actionHandler: nil)
                 print("<<Error:", error!.localizedDescription, ">>")
             } else {
                 if (Auth.auth().currentUser?.isEmailVerified)! {
-                    print("Log in succesful")
                     self.performSegue(withIdentifier: "RegisterToStoryList", sender: self)
                 } else {
                     self.createNickname()
@@ -43,7 +42,7 @@ class RegisterViewController: UIViewController {
                     let message = "A letter has been sent to your e-mail. Please verify your e-mail to log in."
                     self.showAlert(title: "Message:", message: message, actionHandler: { action in
                         self.navigationController?.popToRootViewController(animated: true)
-                    }, textFieldHandler: nil)
+                    })
                 }
             }
         }
