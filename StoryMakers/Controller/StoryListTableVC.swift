@@ -90,7 +90,7 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
                 if storyCreator == currentUser {
                     self.deleteFromDBAndTableView(indexPath)
                 } else {
-                    self.showAlert(title: "Warning", message: "Can't delete story made by another user.", actionHandler: nil)
+                    self.showAlert(title: "Warning", message: "Can't delete a story created by another user.", actionHandler: nil)
                     print("\(currentUser) is not the creator of this story.")
                 }
             })

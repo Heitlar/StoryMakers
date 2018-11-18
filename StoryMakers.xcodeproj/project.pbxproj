@@ -77,6 +77,39 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		914A66C4219ABA3A000BB5C2 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				917F5E821FE8FF8700D21636 /* StoryMakerModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		914A66C5219ABA75000BB5C2 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				91A715241FC9522B0082FD69 /* Main.storyboard */,
+				91A715291FC9522B0082FD69 /* LaunchScreen.storyboard */,
+				91126B711FED64430073776A /* StoryListCell.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		914A66C7219ABAD3000BB5C2 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				91A715201FC9522B0082FD69 /* AppDelegate.swift */,
+				91A715221FC9522B0082FD69 /* WelcomeViewController.swift */,
+				91D6ADCF1FC995F600BA0B2B /* LogInViewController.swift */,
+				91D6ADD11FC9960E00BA0B2B /* RegisterViewController.swift */,
+				91D6ADD31FC9962200BA0B2B /* StoryViewController.swift */,
+				91CBBC611FD15B4A00D9BD47 /* StoryListTableVC.swift */,
+				91126B6C1FEBA0690073776A /* StoryMakersTableVC.swift */,
+				91126B701FED64430073776A /* StoryListCell.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
 		91A715141FC9522B0082FD69 = {
 			isa = PBXGroup;
 			children = (
@@ -98,19 +131,10 @@
 		91A7151F1FC9522B0082FD69 /* StoryMakers */ = {
 			isa = PBXGroup;
 			children = (
-				91A715201FC9522B0082FD69 /* AppDelegate.swift */,
 				915177F32194614A0077D3D4 /* Extensions.swift */,
-				917F5E821FE8FF8700D21636 /* StoryMakerModel.swift */,
-				91A715221FC9522B0082FD69 /* WelcomeViewController.swift */,
-				91D6ADCF1FC995F600BA0B2B /* LogInViewController.swift */,
-				91D6ADD11FC9960E00BA0B2B /* RegisterViewController.swift */,
-				91D6ADD31FC9962200BA0B2B /* StoryViewController.swift */,
-				91CBBC611FD15B4A00D9BD47 /* StoryListTableVC.swift */,
-				91126B6C1FEBA0690073776A /* StoryMakersTableVC.swift */,
-				91126B701FED64430073776A /* StoryListCell.swift */,
-				91126B711FED64430073776A /* StoryListCell.xib */,
-				91A715241FC9522B0082FD69 /* Main.storyboard */,
-				91A715291FC9522B0082FD69 /* LaunchScreen.storyboard */,
+				914A66C4219ABA3A000BB5C2 /* Model */,
+				914A66C5219ABA75000BB5C2 /* View */,
+				914A66C7219ABAD3000BB5C2 /* Controller */,
 				91A715271FC9522B0082FD69 /* Assets.xcassets */,
 				910B1AC81FF2B0D800E6E6CF /* GoogleService-Info.plist */,
 				91A7152C1FC9522B0082FD69 /* Info.plist */,
