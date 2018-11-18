@@ -69,7 +69,6 @@ class StoryViewController: UIViewController, UITextViewDelegate, UITextFieldDele
             let snapshotValue = snapshot.value as! [String : String]
             
             var storyText = snapshotValue["StoryText"]!
-            let storyName = snapshotValue["StoryName"]!
             let sender = snapshotValue["Sender"]!
             if storyText != "" {
                 self.reference.child("Nicknames").observe(.childAdded) { (snapshot) in
@@ -77,9 +76,7 @@ class StoryViewController: UIViewController, UITextViewDelegate, UITextFieldDele
                     if snapshotValue["Email"]! == sender {
                         storyText = "(\(snapshotValue["Nickname"]!)): \(storyText) "
                         
-                        if storyName == self.storyTitle.text {
                             self.storyText.text! += storyText
-                        }
                     }
                 }
             }     

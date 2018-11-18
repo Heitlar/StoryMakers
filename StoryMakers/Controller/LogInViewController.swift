@@ -17,6 +17,10 @@ class LogInViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
+        self.view.addGestureRecognizer(tapGesture)
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -42,4 +46,22 @@ class LogInViewController: UIViewController {
             }
         }
     }
+    
+    @IBAction func forgotPasswordPressed(_ sender: Any) {
+        if login.text != "" {
+            Auth.auth().sendPasswordReset(withEmail: login.text!) { (error) in
+                if error != nil {
+                    self.showAlert(title: "Error", message: error.debugDescription, actionHandler: nil)
+                }
+            }
+        } else {
+            showAlert(title: "Warning", message: "Please enter your email.", actionHandler: nil)
+        }
+    }
+    
+    @objc func viewTapped() {
+        login.endEditing(true)
+        password.endEditing(true)
+    }
+    
 }

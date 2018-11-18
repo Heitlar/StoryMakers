@@ -171,7 +171,7 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
             let passwordTextField = alert.textFields![1] as UITextField
             
             let database = self.reference.child("StoryList").child(textField.text!)
-            let storyNameDictionary = ["Sender": Auth.auth().currentUser?.email!, "StoryName": textField.text!, "StoryText": "", "StoryCreator": self.currentUser?.email!, "StoryPassword": passwordTextField.text!]
+            let storyNameDictionary = ["Sender": Auth.auth().currentUser?.email!, "StoryText": "", "StoryCreator": self.currentUser?.email!, "StoryPassword": passwordTextField.text!]
             database.childByAutoId().setValue(storyNameDictionary) {
                 (error, reference) in
                 if error != nil {
