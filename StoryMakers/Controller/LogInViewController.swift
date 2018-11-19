@@ -48,15 +48,36 @@ class LogInViewController: UIViewController {
     }
     
     @IBAction func forgotPasswordPressed(_ sender: Any) {
-        if login.text != "" {
-            Auth.auth().sendPasswordReset(withEmail: login.text!) { (error) in
-                if error != nil {
-                    self.showAlert(title: "Error", message: error.debugDescription, actionHandler: nil)
+        
+        let alertController = UIAlertController(title: "Enter your email address", message: "", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let alertAction = UIAlertAction(title: "Submit", style: .default) { (alert) in
+            let textField = alertController.textFields![0]
+            if textField.text != "" {
+                Auth.auth().sendPasswordReset(withEmail: textField.text!) { (error) in
+                    if error != nil {
+                        self.showAlert(title: "Error", message: (error?.localizedDescription)!, actionHandler: nil)
+                    } else {
+                        self.showAlert(title: "A message has been sent to your email address", message: "", actionHandler: nil)
+                    }
                 }
+            } else {
+                self.showAlert(title: "Warning", message: "Please enter your email.", actionHandler: nil)
             }
-        } else {
-            showAlert(title: "Warning", message: "Please enter your email.", actionHandler: nil)
+
         }
+        
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Email address"
+            textField.keyboardType = UIKeyboardType.emailAddress
+        }
+        alertController.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = UIColor(displayP3Red: 175/255, green: 255/255, blue: 255/255, alpha: 1)
+        alertController.view.tintColor = UIColor.black
+        alertController.addAction(alertAction)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true, completion: nil)
+        
+        
     }
     
     @objc func viewTapped() {
