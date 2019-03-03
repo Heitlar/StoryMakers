@@ -16,6 +16,7 @@ class StoryMakersTableVC: UITableViewController {
     var storyMakersSections = [[String](), [String]()]
     var usersInfo = [String: String]()
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

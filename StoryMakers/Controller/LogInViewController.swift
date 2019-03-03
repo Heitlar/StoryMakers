@@ -22,10 +22,6 @@ class LogInViewController: UIViewController {
         self.view.addGestureRecognizer(tapGesture)
         
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
     
     @IBAction func logInButton(_ sender: Any) {
         Auth.auth().signIn(withEmail: login.text!, password: password.text!) { user, error in

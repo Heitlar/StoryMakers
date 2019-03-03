@@ -22,8 +22,14 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+                
         
-        searchBar.searchBarStyle = .prominent
+//        searchBar.searchBarStyle = .prominent
+//        searchBar.barTintColor = UIColor.white
+        searchBar.backgroundImage = UIImage()
+        let searchBarTextField = searchBar.value(forKey: "searchField") as? UITextField
+        searchBarTextField?.backgroundColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.7)
+        searchBar.backgroundColor = UIColor(red: 252/255, green: 211/255, blue: 91/255, alpha: 0.2)
         searchBar.placeholder = "Search"
         
     }
@@ -130,11 +136,13 @@ class StoryListTableVC: UITableViewController, CellDelegate, UISearchBarDelegate
                         self.performSegue(withIdentifier: "StoryChosen", sender: self.tableView.cellForRow(at: indexPath))
                     }
                 }
+                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
 
                 alert.addTextField { textField in
                     textField.placeholder = "password"
                 }
                 alert.addAction(action)
+                alert.addAction(cancelAction)
                 self.present(alert, animated: true, completion: nil)
             }
         }

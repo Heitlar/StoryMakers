@@ -21,6 +21,11 @@ class StoryViewController: UIViewController, UITextViewDelegate, UITextFieldDele
     @IBOutlet weak var sendButton: UIButton!
     
     
+    override func viewWillAppear(_ animated: Bool) {
+//        navigationItem.backBarButtonItem?.tintColor = UIColor.black
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
